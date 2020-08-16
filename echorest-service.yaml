@@ -36,3 +36,4 @@ spec:
           image: 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
           ports:
             - containerPort: 8080
+          imagePullPolicy: Always
