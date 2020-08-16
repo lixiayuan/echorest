@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 @RestController
 public class EchoController {
@@ -12,19 +13,55 @@ public class EchoController {
     private static final String LOCALHOST = "127.0.0.1";
     private static final String SEPARATOR = ",";
 
+    private static final String[] HEADERS_LIST = {
+            "X-Forwarded-For",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_X_FORWARDED",
+            "HTTP_X_CLUSTER_CLIENT_IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_VIA",
+            "X-CLIENT-IP",
+            "X-Real-IP",
+            "REMOTE_ADDR"
+    };
+
+
     public static String getIpAddr(HttpServletRequest request) {
-        System.out.println(request);
-        String ipAddress;
+//      print the request type using:
+        System.out.println(request.getMethod());
+
+//        You can print all the headers as mentioned here:
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
+        }
+
+//        To print all the request params, use this:
+        Enumeration<String> params = request.getParameterNames();
+        while(params.hasMoreElements()){
+            String paramName = params.nextElement();
+            System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
+        }
+
+        String ipAddress = "";
         try {
-            ipAddress = request.getHeader("x-forwarded-for");
-            if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("Proxy-Client-IP");
+            for (String header : HEADERS_LIST) {
+                String ip = request.getHeader(header);
+                if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+                    System.out.println(" ipAddress: " + ipAddress + " header: " + header );
+                    ipAddress = ip ;
+                    break;
+                }
             }
-            if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("WL-Proxy-Client-IP");
-            }
+
             if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
+                System.out.println("getRemoteAddr - " + ipAddress);
                 if (LOCALHOST.equals(ipAddress)) {
                     InetAddress inet = null;
                     try {
@@ -46,11 +83,23 @@ public class EchoController {
         }
         return ipAddress;
     }
-    
+
     @PostMapping(path = "/echo", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Echo echo(@RequestParam(value = "x", defaultValue = "Hello") String queryStringParams,
-                     @RequestBody Greeting requestBody, HttpServletRequest request) {
+//    public Echo echo(@RequestParam(value = "x", defaultValue = "Hello") String queryStringParams,
+//                     @RequestBody Greeting requestBody, HttpServletRequest request) {
+    public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
+        //To get all the request params:
+        Enumeration<String> params = request.getParameterNames();
+        String queryStringParams = "";
+        int i=1;
+        while(params.hasMoreElements()){
+            String paramName = params.nextElement();
+            queryStringParams = queryStringParams +
+                    " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
+        }
+        System.out.println("queryStringParams - " +queryStringParams);
+
         String ip = getIpAddr(request);
         String useragent = request.getHeader("User-Agent");
         Echo echo = new Echo(queryStringParams, requestBody, ip, useragent);

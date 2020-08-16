@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echorest-service
+  namespace: echorest-namespace
+  labels:
+    app: echorest-app
+spec:
+  selector:
+    app: echorest-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echorest-deployment
+  namespace: echorest-namespace
+  labels:
+    app: echorest-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echorest-app
+  template:
+    metadata:
+      labels:
+        app: echorest-app
+    spec:
+      containers:
+        - name: echorest
+          image: 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
+          ports:
+            - containerPort: 8080
