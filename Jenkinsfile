@@ -7,10 +7,10 @@ node {
 		     checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lixiayuan/echorest.git']]])
 	    }
 
-	    stage ('Maven Build'){
+	    stage ('Maven Build & Push to ECR'){
 	    	 sh """
                  sudo docker login -u AWS -p \$(aws ecr get-login-password --region ap-southeast-1) 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com
-                 sudo docker build --rm=false -t echorest . --build-arg BUILD=\"${SCM_BRANCH}-${currentBuild.number}\"
+                 sudo docker build --rm=false -t echorest .
                  sudo docker tag echorest:latest 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
                  sudo docker push 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
          	 """
@@ -19,15 +19,28 @@ node {
              sh "sudo docker image prune -f"
 	    }
 
+	    stage ('Deploy'){
+            try{
+                echo "Attempting image rolling update..."
+                sh "/usr/local/bin/kubectl -n echorest-namespace set image deployment.apps/echorest-deployment  echorest=021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:${currentBuild.number}"
+                sh "/usr/local/bin/kubectl -n echorest-namespace rollout status deployment.apps/echorest-deployment"
 
+            }catch(Exception e){
+                echo "echorest deployment/service do not exist"
+                sh "/usr/local/bin/kubectl create namespace echorest-namespace"
+                sh "/usr/local/bin/kubectl apply -f echorest-service.yaml"
+            }
+            sh "/usr/local/bin/kubectl get all -n echorest-namespace"
+
+	    }
 
 	}catch(error){
 	    echo error
 	    throw error
 	}finally{
-	    	    //clean containers
-		       // sh "sudo docker rm \$(sudo docker ps -a -f status=exited -q)"
-				//sh "sudo docker rm \$(sudo docker ps -a -f status=created -q)"
-               // sh "sudo docker rmi \$(sudo docker images -f dangling=true -q)"
+	   //clean containers
+	    sh "sudo docker rm \$(sudo docker ps -a -f status=exited -q)"
+		sh "sudo docker rm \$(sudo docker ps -a -f status=created -q)"
+        sh "sudo docker rmi \$(sudo docker images -f dangling=true -q)"
 	}
 }
