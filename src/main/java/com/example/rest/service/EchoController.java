@@ -32,22 +32,6 @@ public class EchoController {
 
 
     public static String getIpAddr(HttpServletRequest request) {
-//      print the request type using:
-        System.out.println(request.getMethod());
-
-//        You can print all the headers as mentioned here:
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while(headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
-        }
-
-//        To print all the request params, use this:
-        Enumeration<String> params = request.getParameterNames();
-        while(params.hasMoreElements()){
-            String paramName = params.nextElement();
-            System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
-        }
 
         String ipAddress = "";
         try {
@@ -87,30 +71,27 @@ public class EchoController {
 
     @PostMapping(path = "/echo", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-//    public Echo echo(@RequestParam(value = "x", defaultValue = "Hello") String queryStringParams,
-//                     @RequestBody Greeting requestBody, HttpServletRequest request) {
-//    public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
+    public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
 
-    public Echo echo(@RequestBody Greeting requestBody, @RequestHeader Map<String, String> headers) {
-        headers.forEach((key, value) -> {
-            System.out.println("Header: " +  key + "value: "  + value);
-        });
-//        //To get all the request params:
-//        Enumeration<String> params = request.getParameterNames();
-//        String queryStringParams = "";
-//        int i=1;
-//        while(params.hasMoreElements()){
-//            String paramName = params.nextElement();
-//            queryStringParams = queryStringParams +
-//                    " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
-//        }
-//        System.out.println("queryStringParams - " +queryStringParams);
-//
-//        String ip = getIpAddr(request);
-//        String useragent = request.getHeader("User-Agent");
-//        Echo echo = new Echo(queryStringParams, requestBody, ip, useragent);
-        Echo echo = new Echo("queryStringParams", requestBody, "ip", "useragent");
-        return echo;
+//    public Echo echo(@RequestBody Greeting requestBody, @RequestHeader Map<String, String> headers) {
+//        headers.forEach((key, value) -> {
+//            System.out.println("Header: " +  key + "value: "  + value);
+//        });
+        //To get all the request params:
+        Enumeration<String> params = request.getParameterNames();
+        String queryStringParams = "";
+        int i=1;
+        while(params.hasMoreElements()){
+            String paramName = params.nextElement();
+            queryStringParams = queryStringParams +
+                    " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
+        }
+        System.out.println("queryStringParams - " +queryStringParams);
+
+        String ip = getIpAddr(request);
+        String useragent = request.getHeader("User-Agent");
+//        Echo echo = new Echo("queryStringParams", requestBody, "ip", "useragent");
+        return new Echo(queryStringParams, requestBody, ip, useragent);
     }
 
     @GetMapping("/echo/all")
