@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/external-traffic: OnlyLocal
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   name: echorest-service
   namespace: echorest-namespace
   labels:
