@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.Map;
 
 @RestController
 public class EchoController {
@@ -88,21 +89,27 @@ public class EchoController {
     @ResponseStatus(HttpStatus.CREATED)
 //    public Echo echo(@RequestParam(value = "x", defaultValue = "Hello") String queryStringParams,
 //                     @RequestBody Greeting requestBody, HttpServletRequest request) {
-    public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
-        //To get all the request params:
-        Enumeration<String> params = request.getParameterNames();
-        String queryStringParams = "";
-        int i=1;
-        while(params.hasMoreElements()){
-            String paramName = params.nextElement();
-            queryStringParams = queryStringParams +
-                    " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
-        }
-        System.out.println("queryStringParams - " +queryStringParams);
+//    public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
 
-        String ip = getIpAddr(request);
-        String useragent = request.getHeader("User-Agent");
-        Echo echo = new Echo(queryStringParams, requestBody, ip, useragent);
+    public Echo echo(@RequestBody Greeting requestBody, @RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            System.out.println("Header: " +  key + "value: "  + value);
+        });
+//        //To get all the request params:
+//        Enumeration<String> params = request.getParameterNames();
+//        String queryStringParams = "";
+//        int i=1;
+//        while(params.hasMoreElements()){
+//            String paramName = params.nextElement();
+//            queryStringParams = queryStringParams +
+//                    " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
+//        }
+//        System.out.println("queryStringParams - " +queryStringParams);
+//
+//        String ip = getIpAddr(request);
+//        String useragent = request.getHeader("User-Agent");
+//        Echo echo = new Echo(queryStringParams, requestBody, ip, useragent);
+        Echo echo = new Echo("queryStringParams", requestBody, "ip", "useragent");
         return echo;
     }
 
