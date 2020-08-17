@@ -13,5 +13,5 @@ ARG BUILD
 COPY --from=BUILD /usr/src/myapp/target/* /home/
 
 EXPOSE 8080
-
+JAVA_OPTS="$JAVA_OPTS -Dtomcat.util.http.parser.HttpParser.requestTargetAllow={}
 CMD ["java", "-jar", "/home/rest.service-0.0.1-SNAPSHOT.jar"]
