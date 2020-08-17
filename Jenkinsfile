@@ -7,7 +7,7 @@ node {
 		     checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lixiayuan/echorest.git']]])
 	    }
 
-	    stage ('Maven Build){
+	    stage ('Maven Build'){
 	        sh "sudo docker build --rm=false -t echorest ."
 
 	    }
