@@ -15,4 +15,4 @@ COPY --from=BUILD /usr/src/myapp/target/* /home/
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/home/rest.service-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dtomcat.util.http.parser.HttpParser.requestTargetAllow=[]", "/home/rest.service-0.0.1-SNAPSHOT.jar"]

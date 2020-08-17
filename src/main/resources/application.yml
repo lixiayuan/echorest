@@ -1,0 +1,4 @@
+server:
+  tomcat:
+    relaxed-query-chars: "[,]"
+    relaxed-path-chars: "[,]"
