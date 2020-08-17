@@ -13,7 +13,7 @@ node {
 	    }
         stage ('Push to ECR'){
 	    	 sh """
-                 sudo docker login -u AWS -p \$(/usr/local/bin/aws ecr get-login-password --region ap-southeast-1) 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com
+                 sudo docker login -u AWS -p \$(sudo /usr/local/bin/aws ecr get-login-password --region ap-southeast-1) 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com
 
                  sudo docker tag echorest:latest 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
                  sudo docker push 021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:latest
