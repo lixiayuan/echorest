@@ -3,8 +3,7 @@ FROM maven:3.6.3-jdk-8 as BUILD
 COPY src /usr/src/myapp/src
 COPY pom.xml /usr/src/myapp
 #RUN mvn -f /usr/src/myapp/pom.xml clean test -Dspring.profiles.active=test
-RUN mvn -f /usr/src/myapp/pom.xml package
-
+RUN mvn -f /usr/src/myapp/pom.xml -Dtomcat.util.http.parser.HttpParser.requestTargetAllow=[] package
 
 #release container
 FROM openjdk:8-jre-alpine

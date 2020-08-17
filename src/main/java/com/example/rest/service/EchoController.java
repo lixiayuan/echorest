@@ -33,6 +33,12 @@ public class EchoController {
 
     public static String getIpAddr(HttpServletRequest request) {
 
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
+        }
+
         String ipAddress = "";
         try {
             for (String header : HEADERS_LIST) {
@@ -73,10 +79,6 @@ public class EchoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Echo echo(@RequestBody Greeting requestBody, HttpServletRequest request) {
 
-//    public Echo echo(@RequestBody Greeting requestBody, @RequestHeader Map<String, String> headers) {
-//        headers.forEach((key, value) -> {
-//            System.out.println("Header: " +  key + "value: "  + value);
-//        });
         //To get all the request params:
         Enumeration<String> params = request.getParameterNames();
         String queryStringParams = "";
