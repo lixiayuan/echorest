@@ -26,15 +26,15 @@ node {
 	    stage ('Deploy to EKS'){
             try{
                 echo "Attempting image rolling update..."
-                sh "/usr/local/bin/kubectl -n echorest-namespace set image deployment.apps/echorest-deployment  echorest=021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:${currentBuild.number}"
-                sh "/usr/local/bin/kubectl -n echorest-namespace rollout status deployment.apps/echorest-deployment"
+                sh "sudo /usr/local/bin/kubectl -n echorest-namespace set image deployment.apps/echorest-deployment  echorest=021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:${currentBuild.number}"
+                sh "sudo /usr/local/bin/kubectl -n echorest-namespace rollout status deployment.apps/echorest-deployment"
 
             }catch(Exception e){
                 echo "echorest deployment/service do not exist"
-                sh "/usr/local/bin/kubectl create namespace echorest-namespace"
-                sh "/usr/local/bin/kubectl apply -f echorest-service.yaml"
+                sh "sudo /usr/local/bin/kubectl create namespace echorest-namespace"
+                sh "sudo /usr/local/bin/kubectl apply -f echorest-service.yaml"
             }
-            sh "/usr/local/bin/kubectl get all -n echorest-namespace"
+            sh "sudo /usr/local/bin/kubectl get all -n echorest-namespace"
 
 	    }
 
