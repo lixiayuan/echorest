@@ -59,8 +59,6 @@ Readonly User Credentials:
 
 Jenkins:
 * URL: http://54.255.222.100:8080
-* Username: admin
-* Password: **********
 * Pipeline: [Build-dev-Echo](http://54.255.222.100:8080/job/Build-dev-Echo/)
     
 ##### Setup Instruction
