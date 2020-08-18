@@ -26,19 +26,19 @@ node {
 	    stage ('Deploy to EKS'){
             try{
                 echo "Attempting image rolling update..."
-                sh "sudo kubectl -n echorest-namespace set image deployment.apps/echorest-deployment  echorest=021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:${currentBuild.number}"
-                sh "sudo kubectl -n echorest-namespace rollout status deployment.apps/echorest-deployment"
+                sh "sudo /usr/local/bin//usr/local/bin/kubectl -n echorest-namespace set image deployment.apps/echorest-deployment  echorest=021134547635.dkr.ecr.ap-southeast-1.amazonaws.com/echorest:${currentBuild.number}"
+                sh "sudo /usr/local/bin/kubectl -n echorest-namespace rollout status deployment.apps/echorest-deployment"
 
             }catch(Exception e){
                 echo "echorest deployment/service do not exist"
-                sh "sudo kubectl apply -f echorest-namespace.yaml"
-                sh "sudo kubectl apply -f echorest-service.yaml"
-                sh "sudo kubectl apply -f echorest-ingress.yaml"
+                sh "sudo /usr/local/bin/kubectl apply -f echorest-namespace.yaml"
+                sh "sudo /usr/local/bin/kubectl apply -f echorest-service.yaml"
+                sh "sudo /usr/local/bin/kubectl apply -f echorest-ingress.yaml"
             }
 
-            sh "sudo kubectl -n echorest-namespace describe ingress echorest-ingress"
-            sh "sudo kubectl -n echorest-namespace describe service echorest-service"
-            sh "sudo kubectl -n echorest-namespace get all"
+            sh "sudo /usr/local/bin/kubectl -n echorest-namespace describe ingress echorest-ingress"
+            sh "sudo /usr/local/bin/kubectl -n echorest-namespace describe service echorest-service"
+            sh "sudo /usr/local/bin/kubectl -n echorest-namespace get all"
 	    }
 
 	}catch(error){
