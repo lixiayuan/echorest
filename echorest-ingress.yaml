@@ -6,7 +6,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-#    alb.ingress.kubernetes.io/subnets: subnet-0036bc77b364c791c, subnet-03338f313d00d8408, subnet-0682532156f962840
   labels:
     app: echorest-ingress
 spec:
@@ -17,9 +16,7 @@ spec:
             backend:
               serviceName: echorest-service
               servicePort: 8080
-              hostPort: 8080
           - path: /echo/all
             backend:
               serviceName: echorest-service
               servicePort: 8080
-              hostPort: 8080

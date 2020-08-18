@@ -15,36 +15,30 @@ public class EchoController {
     private static final String SEPARATOR = ",";
 
     private static final String[] HEADERS_LIST = {
-            "X-Forwarded-For",
-            "Proxy-Client-IP",
-            "WL-Proxy-Client-IP",
-            "HTTP_X_FORWARDED_FOR",
-            "HTTP_X_FORWARDED",
-            "HTTP_X_CLUSTER_CLIENT_IP",
-            "HTTP_CLIENT_IP",
-            "HTTP_FORWARDED_FOR",
-            "HTTP_FORWARDED",
-            "HTTP_VIA",
-            "X-CLIENT-IP",
-            "X-Real-IP",
-            "REMOTE_ADDR"
+            "x-forwarded-for",
+            "proxy-client-ip",
+            "wl-proxy-client-ip",
+            "http_x_forwarded_for",
+            "http_x_forwarded",
+            "http_x_cluster_client_ip",
+            "http_client_ip",
+            "http_forwarded_for",
+            "http_forwarded",
+            "http_via",
+            "via",
+            "x-client-ip",
+            "x-real-ip",
+            "remote_addr"
     };
 
 
     public static String getIpAddr(HttpServletRequest request) {
-
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while(headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
-        }
 
         String ipAddress = "";
         try {
             for (String header : HEADERS_LIST) {
                 String ip = request.getHeader(header);
                 if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-                    System.out.println(" ipAddress: " + ipAddress + " header: " + header );
                     ipAddress = ip ;
                     break;
                 }
@@ -52,7 +46,6 @@ public class EchoController {
 
             if (ipAddress == null || ipAddress.length() == 0 || UNKNOWN.equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
-                System.out.println("getRemoteAddr - " + ipAddress);
                 if (LOCALHOST.equals(ipAddress)) {
                     InetAddress inet = null;
                     try {
@@ -88,18 +81,14 @@ public class EchoController {
             queryStringParams = queryStringParams +
                     " Parameter " + (i++) + ": (Name - "+paramName+", Value - "+ request.getParameter(paramName) +") ";
         }
-        System.out.println("queryStringParams - " +queryStringParams);
 
         String ip = getIpAddr(request);
         String useragent = request.getHeader("User-Agent");
-//        Echo echo = new Echo("queryStringParams", requestBody, "ip", "useragent");
         return new Echo(queryStringParams, requestBody, ip, useragent);
     }
 
     @GetMapping("/echo/all")
     public String echoall(@RequestParam(value = "x", defaultValue = "World") String x) {
-        return "hello" + x;
+        return "Hello" + x;
     }
-
-
 }
