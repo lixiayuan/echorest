@@ -1,12 +1,5 @@
 # Echo solution
 
-### Requirement
-* 	Submit only 1 file, named SOLUTION-<YOUR-NAME>.md, written in Markdown format.
-* 	Include your name and email.
-* 	Include the link to test the REST API endpoint and the link to the public repository for the application.
-*	Include the login credentials for the tester’s readonly user account on AWS.
-*	Include setup instructions for your solution. The tester will attempt to replicate your solution based on these instructions.
-
 Lixia Yuan <lixiayuan@hotmail.com>
 
 ### REST API application
@@ -62,15 +55,13 @@ Jenkins pipeline is created, it automates git checkout, maven build, push to ECR
 Readonly User Credentials:
 * Username: user1
 * Password: ylx098@7
-* Access key ID: AKIAQJ25XTKZR52Z2FF5
-* Secret access key:  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
 * Console login link: https://021134547635.signin.aws.amazon.com/console
 
 Jenkins:
 * URL: http://54.255.222.100:8080
 * Username: admin
-* Password: Vl@gBeig35Logi
-* Pipeline:[Build-dev-Echo](http://54.255.222.100:8080/job/Build-dev-Echo/)
+* Password: **********
+* Pipeline: [Build-dev-Echo](http://54.255.222.100:8080/job/Build-dev-Echo/)
     
 ##### Setup Instruction
 1. Create a EC2 instance as Build Server(T2.micro).
