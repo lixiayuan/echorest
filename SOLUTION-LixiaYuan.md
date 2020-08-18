@@ -54,7 +54,7 @@ Jenkins pipeline is created, it automates git checkout, maven build, push to ECR
 
 Readonly User Credentials:
 * Username: user1
-* Password: ylx098@7
+* Password: *******
 * Console login link: https://021134547635.signin.aws.amazon.com/console
 
 Jenkins:
